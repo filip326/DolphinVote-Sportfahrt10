@@ -3,6 +3,7 @@
 interface VoteData {
     name: string;
     klasse: string;
+    timeframe: string;
     options: {
         option_name: string;
         option_description: string;
@@ -20,7 +21,7 @@ export default {
             data: {
                 name: "",
                 klasse: "",
-                options: [] as {
+                timeframe: "",                options: [] as {
                     option_name: string;
                     option_description: string;
                     option_id: string;
@@ -32,7 +33,8 @@ export default {
             } as {
                 [key: number]: {
                     loading: boolean;
-                }
+                    success?: boolean;
+                } | undefined;
             }
         }
     },
@@ -56,6 +58,29 @@ export default {
         async select(index: number) {
             this.buttons[index] = { loading: true };
             // send data (option_name) to server
+
+            const response = await fetch("/vote", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    option_id: this.data.options[index].option_id
+                })
+            });
+
+            if (response.status === 200) {
+                // success
+                this.buttons[index] = { loading: false, success: true}
+            } else {
+                // error
+                this.$router.push("/error");
+                this.buttons[index] = { loading: false, success: false }
+            }
+
+            setTimeout(() => {
+                this.buttons[index] = undefined;
+            }, 3_000);
 
         }
     }
