@@ -5,9 +5,6 @@ export default {
             this.code = this.code.toUpperCase().replace(/[^0-9A-Z]/g, "");
             this.codeValidator();
         },
-        async register() {
-
-        },
         checkCodeWithBackend() {
 
             const that = this;
@@ -43,9 +40,26 @@ export default {
         },
         async submit() {
             try {
+                const response = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: this.code,
+                        name: this.name,
+                        klasse: this.klasse
+                    }),
+                });
+                const jsonReponse = await response.json();
 
+                if (jsonReponse === true) {
+                    this.$router.push("/vote");
+                } else {
+                    this.$router.push("/error");
+                }
             } catch {
-
+                this.$router.push("/error");
             }
         }
     },
@@ -90,8 +104,7 @@ export default {
             </v-card-text>
 
             <v-card-actions>
-                <v-spacer />
-                <v-btn color="primary" :disabled="!codeValid || button.disabled" :loading="button.loading" @click="register()">Registrieren</v-btn>
+                <v-btn color="primary" :disabled="!codeValid || button.disabled" :loading="button.loading" @click="submit()">Registrieren</v-btn>
             </v-card-actions>
         </v-card>
     </v-form>
