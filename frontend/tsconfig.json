@@ -1,11 +1,30 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "include": [
+    "env.d.ts",
+    "src",
+    "src/**/*.ts",
+    "src/*.ts",
+    "src/**/*.d.ts",
+    "src/*.d.ts",
+    ".eslintrc.ejs",
+    "vite.config.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "declaration": false,
+    "preserveValueImports": false,
+    "importsNotUsedAsValues": "remove",
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
     }
-  ]
+  }
 }
