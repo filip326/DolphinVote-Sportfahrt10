@@ -1,15 +1,35 @@
-import './assets/main.css'
+import { createApp } from "vue";
+import Index from "./Index.vue";
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import vuetify from './plugins/vuetify'
+import Homepage from "./pages/Homepage.vue";
+import Login from "./pages/Login.vue";
+import "vuetify/styles"
+import "@mdi/font/css/materialdesignicons.css";
+import "./assets/base.css";
 
-const app = createApp(App)
+import { createRouter, createWebHistory } from "vue-router";
 
-app.use(router)
+import vuetify from "./plugins/vuetify";
 
-app
+const routes = [
+    {
+        path: "/",
+        name: "Login",
+        component: Login
+    },
+    {
+        path: "/home",
+        name: "Startseite",
+        component: Homepage
+    }
+];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes
+});
+
+createApp(Index)
+    .use(router)
     .use(vuetify)
-    .mount('#app')
-    
+    .mount("#app");
