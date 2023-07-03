@@ -1,8 +1,7 @@
 import { createApp } from "vue";
-import Index from "./Index.vue";
 
-import Homepage from "./pages/Homepage.vue";
-import Login from "./pages/Login.vue";
+import Index from "./components/IndexPage.vue";
+import Homepage from "./views/HomeView.vue";
 import "vuetify/styles"
 import "@mdi/font/css/materialdesignicons.css";
 import "./assets/base.css";
@@ -14,13 +13,18 @@ import vuetify from "./plugins/vuetify";
 const routes = [
     {
         path: "/",
-        name: "Login",
-        component: Login
-    },
-    {
-        path: "/home",
         name: "Startseite",
         component: Homepage
+    },
+    {
+        path: "/already-registered", 
+        name: "Bereits registriert",
+        component: () => import("./views/AlreadyRegisteredView.vue")
+    },
+    {
+        path: "/wron-credentials",
+        name: "Falsche Anmeldedaten",
+        component: () => import("./views/WrongCredentialsView.vue")
     }
 ];
 

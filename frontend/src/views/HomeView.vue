@@ -39,6 +39,7 @@ export default {
             }
         },
         async submit() {
+            this.button.loading = true;
             try {
                 const response = await fetch("/register", {
                     method: "POST",
@@ -51,12 +52,15 @@ export default {
                         klasse: this.klasse
                     }),
                 });
-                const jsonReponse = await response.json();
-
-                if (jsonReponse === true) {
+                if (response.status === 200) {
                     this.$router.push("/vote");
-                } else {
-                    this.$router.push("/error");
+                } else if (response.status === 401) {
+                    // wrong name, class or code
+                    this.$router.push("/wrong-credentials");
+
+                } else if (response.status === 403) {
+                    // already registered device
+                    this.$router.push("/already-registered");
                 }
             } catch {
                 this.$router.push("/error");
@@ -91,7 +95,7 @@ export default {
                 Registrieren
             </v-card-title>
             <v-card-subtitle>
-                Gerät registrieren um an der Wahl teilzunehmen
+                Gerät registrieren, um an der Wahl teilzunehmen. <b>Pro Schüler kann nur ein Gerät registriert werden.</b>
             </v-card-subtitle>
 
             <v-card-text>
@@ -111,9 +115,6 @@ export default {
 </template>
 
 <style scoped>
-.v-card {
-    margin: 20px;
-}
 
 @media screen and (min-width: 360px) {
     .next-to {
