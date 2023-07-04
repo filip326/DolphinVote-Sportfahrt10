@@ -95,7 +95,7 @@ export default {
                 Registrieren
             </v-card-title>
             <v-card-subtitle>
-                Gerät registrieren, um an der Wahl teilzunehmen. <b>Pro Schüler kann nur ein Gerät registriert werden.</b>
+                Gerät registrieren, um an der Wahl teilzunehmen. <b>Für jeden Schüler kann nur ein Gerät registriert werden.</b>
             </v-card-subtitle>
 
             <v-card-text>

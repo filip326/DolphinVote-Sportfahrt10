@@ -84,7 +84,7 @@ export default {
                 </v-card-subtitle>
                 <v-card-text>
                     <ul>
-                        <li v-for="voter in option.options[index].voters">
+                        <li v-for="voter in option.options[index].voters" v-bind:key="voter.name">
                             {{ voter.name }} | {{ voter.class }}
                         </li>
                     </ul>
