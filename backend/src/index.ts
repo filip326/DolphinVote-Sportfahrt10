@@ -26,6 +26,15 @@ async function main() {
 
   await initdb(db);
 
+  /* 
+  Vote
+  */
+
+  /* 
+  Admin
+  */
+
+
   app.use(express.json());
   app.use(cookieParser());
 
