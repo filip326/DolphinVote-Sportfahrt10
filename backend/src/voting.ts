@@ -56,7 +56,7 @@ export default function (db: Db): Router {
             time: req.query.time
         }).toArray())?.map((project) => ({
             id: project._id.toHexString(),
-            name: project.option_name,
+            name: project.name,
         })) ?? undefined;
 
         if (!result) {

@@ -5,7 +5,7 @@ export interface VoteData {
 }
 
 export interface VoteOption {
-    option_name: string;
+    name: string;
     free_slots: number;
     time: VoteTime;
 }
