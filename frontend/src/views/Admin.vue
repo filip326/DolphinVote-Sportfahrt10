@@ -1,8 +1,16 @@
 <script lang="ts">
+import IUser from './types/user'
+import { ref } from 'vue'
+
 export default {
     data() {
         return {
-            status: false
+            status: false,
+            dialog: false,
+            chUser: ref<IUser>(),
+            users: Array<IUser>(),
+            chName: '',
+            cookieReset: false
         }
     },
     mounted() {
@@ -14,12 +22,58 @@ export default {
             .then(data => {
                 this.status = data.status
             })
+
+        fetch('/users', {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.users = data.users
+            });
+    },
+    methods: {
+        changeUser(id: number) {
+            this.chUser = this.users[id]
+            this.dialog = true
+        },
+        updateUser(id: string) {
+            fetch('/user/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: this.chName,
+                    cookieReset: this.cookieReset
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message)
+                });
+        }
     }
 }
 </script>
 
 <template>
     <div class="wrapper">
+        <v-dialog v-if="dialog">
+            <v-card>
+                <v-card-title>
+                    Benutzer bearbeiten
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field label="Name" v-model="chName"></v-text-field>
+                    <v-btn @click="cookieReset = true">Cookie Reset</v-btn>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn @click=updateUser(chUser?._id!)>Speichern</v-btn>
+                    <v-btn @click="dialog = false">Abbrechen</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-card>
             <v-card-title>
                 Start/ Stopp
@@ -32,6 +86,27 @@ export default {
                     'Starten' }}</v-btn>
             </v-card-actions>
         </v-card>
+        <v-divider style="margin-top: 40px; margin-bottom: 40px;"></v-divider>
+        <v-table fixed-header>
+            <thead>
+                <tr>
+                    <th class="text-left">Benutzername</th>
+                    <th class="text-left">Abgestimmt</th>
+                    <th class="text-left">Cookie</th>
+                    <th class="text-left">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item, index in users" :key="item._id">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.voted ? 'Ja' : 'Nein' }}</td>
+                    <td>{{ item.cookie ?? '-' }}</td>
+                    <td>
+                        <v-btn @click="changeUser(index)" elevation="0" icon="mdi-pencil"></v-btn>
+                    </td>
+                </tr>
+            </tbody>
+        </v-table>
     </div>
 </template>
 
