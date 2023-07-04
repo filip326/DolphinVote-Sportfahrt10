@@ -18,7 +18,7 @@ export default function (db: Db): Router {
         res.status(200).send([
             {
                 voting: "Mi-Vormittag",
-                open: (req.auth.user.votes === undefined || req.auth.user.votes["Mi-Vormittag"] === undefined)
+                open: (req.auth.user.votes === undefined || req.auth.user.votes["Mi-Vormittag"] === undefined) // true = not voted yet, false = already voted
             },
             {
                 voting: "Mi-Nachmittag",
@@ -57,10 +57,7 @@ export default function (db: Db): Router {
             _id: 1,
             option_name: 1,
             free_slots: 1,
-            time: 1,
-        }).toArray()
-
-        
+        }).toArray()        
     })
 
     router.post("/vote", async (req, res) => {

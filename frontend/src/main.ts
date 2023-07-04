@@ -30,6 +30,10 @@ const routes = [
         path: "/vote",
         name: "Wahl",
         component: () => import("./views/VoteView.vue")
+    }, {
+        path: "/error",
+        name: "Fehler",
+        component: () => import("./views/GeneralErrorView.vue")
     }
 ];
 
