@@ -1,13 +1,40 @@
 import { Router } from "express";
 import { Db, ObjectId } from "mongodb";
-import { VoteOption } from "types/vote";
+import { VoteOption, VoteTime } from "types/vote";
 
 
 export default function (db: Db): Router {
     const projectColleciton = db.collection<VoteOption>("projects");
 
-
     const router = Router();
+
+    router.get("/votings", async (req, res) => {
+
+        if (!req.auth || req.auth.auth === false || !req.auth.user) {
+            res.status(401).send("Unauthorized");
+            return;
+        }
+
+        res.status(200).send([
+            {
+                voting: "Mi-Vormittag",
+                open: (req.auth.user.votes === undefined || req.auth.user.votes["Mi-Vormittag"] === undefined)
+            },
+            {
+                voting: "Mi-Nachmittag",
+                open: (req.auth.user.votes === undefined || req.auth.user.votes["Mi-Nachmittag"] === undefined)
+            },
+            {
+                voting: "Do-Vormittag",
+                open: (req.auth.user.votes === undefined || req.auth.user.votes["Do-Vormittag"] === undefined)
+            },
+            {
+                voting: "Do-Nachmittag",
+                open: (req.auth.user.votes === undefined || req.auth.user.votes["Do-Nachmittag"] === undefined)
+            }
+        ])
+
+    })
 
     router.get("/options", async (req, res) => {
 
@@ -105,6 +132,27 @@ export default function (db: Db): Router {
         res.status(200).send("OK");
 
     });
+
+    router.get('/result', async (req, res) => {
+        // check authentication
+        if (!req.auth || req.auth.auth === false || !req.auth.user) {
+            res.status(401).send("Unauthorized");
+            return;
+        }
+        
+        const results = req.auth.user.results;
+        if (!results) {
+            res.status(404).send("No results found");
+            return;
+        }
+        let votingResults: { [key in VoteTime]?: string } = {};
+        for await (const time of Object.keys(results) as VoteTime[]) {
+            votingResults[time] = (await projectColleciton.findOne({
+                _id: results[time]
+            }))?.option_name;
+        }
+        res.status(200).send(votingResults);
+    })
 
 
     return router;

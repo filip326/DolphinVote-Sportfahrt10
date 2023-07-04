@@ -2,6 +2,8 @@ import { Router } from "express";
 import { Db, WithId } from "mongodb";
 import IUser from "./types/user";
 
+import { randomBytes } from "node:crypto";
+
 declare global {
     namespace Express {
         interface Request {
@@ -31,7 +33,6 @@ export default (db: Db): Router => {
     router.post("/register", async (req, res) => {
         const code = req.body.code;
         const name = req.body.name;
-        const klasse = req.body.klasse;
 
         // check if code matches regex /^[A-Z0-9]{8}$/
         if (!code.match(/^[A-Z0-9]{8}$/)) {
@@ -40,10 +41,9 @@ export default (db: Db): Router => {
         }
 
         // check if name and code exists in db
-        // TODO! use global code and not single codes for every user
-        const result = await db.collection<IUser>("users").findOne({ code: code, name: name, klasse: klasse });
+        const result = await db.collection<IUser>("users").findOne({ code: code, name: name });
         if (!result) {
-            res.status(401).send("No");
+            res.status(401).send("Invalid Name or Code");
             return;
         }
 
@@ -54,10 +54,10 @@ export default (db: Db): Router => {
 
         // create a device cookie and add it to the db
         // TODO! use crypto.randomBytes instead of Math.random
-        const cookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const cookie = randomBytes(32).toString("base64");
         // set the device for the user in db
         // TODO! check if db write was successful
-        await db.collection("users").updateOne({ code: code, name: name, klasse: klasse }, { $set: { device: cookie } });
+        await db.collection<IUser>("users").updateOne({ _id: result._id }, { $set: { device: cookie } });
 
         // send the cookie to the client
         res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true, secure: true });
