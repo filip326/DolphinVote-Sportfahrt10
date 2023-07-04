@@ -4,32 +4,34 @@ import { VotingResponse, OptionResponse, ResultResponse, VotingType } from './ty
 export default {
     data() {
         return {
-            voting: {
+            votings: [{
                 open: true,
                 voting: 'Mi-Vormittag'
-            } as VotingResponse,
-            options: [
-                {
-                    id: 1,
-                    name: 'Coding'
-                },
-                {
-                    id: 2,
-                    name: 'Tennis'
-                },
-                {
-                    id: 3,
-                    name: 'Basketball'
-                }
-            ],
+            }] as VotingResponse[],
+            options: {
+                "Mi-Vormittag": [
+                    {
+                        id: 1,
+                        name: 'Coding'
+                    },
+                    {
+                        id: 2,
+                        name: 'Tennis'
+                    },
+                    {
+                        id: 3,
+                        name: 'Basketball'
+                    }
+                ]
+            } as unknown as { [key: string]: OptionResponse[] },
             result: {
                 erstwunsch: 'Coding',
                 zweitwunsch: 'Tennis',
                 drittwunsch: 'Basketball'
             } as ResultResponse || undefined,
-            erstwunsch: '',
-            zweitwunsch: '',
-            drittwunsch: ''
+            erstwunsch: {} as { [key: string]: string },
+            zweitwunsch: {} as { [key: string]: string },
+            drittwunsch: {} as { [key: string]: string },
         }
     },
     beforeMount() {
@@ -37,16 +39,16 @@ export default {
         fetch('/votings')
             .then(response => response.json())
             .then(data => {
-                this.voting = data;
-            })
-        if (this.voting.open) {
-            // fetch options
-            fetch(`/options?time=${this.voting.voting}`)
+                this.votings = data;
+            });
+        // fetch options
+        this.votings.forEach((voting: VotingResponse) => {
+            fetch(`/options?voting=${voting.voting}`)
                 .then(response => response.json())
                 .then(data => {
-                    this.options = data;
-                });
-        }
+                    this.options[voting.voting] = data;
+                })
+        })
         // fetch results
         fetch(`/results`)
             .then(response => response.json())
@@ -56,19 +58,19 @@ export default {
     },
     methods: {
         vote(time: VotingType) {
-            if (!this.erstwunsch || !this.zweitwunsch || !this.drittwunsch) {
+            if (!this.erstwunsch[time] || !this.zweitwunsch[time] || !this.drittwunsch[time]) {
                 alert("Es müssen Erstwunsch, Zweitwunsch und Drittwunsch ausgewählt sein!")
             }
-            if (this.erstwunsch == this.zweitwunsch || this.erstwunsch == this.drittwunsch || this.zweitwunsch == this.drittwunsch) {
+            if (this.erstwunsch[time] == this.zweitwunsch[time] || this.erstwunsch[time] == this.drittwunsch[time] || this.zweitwunsch[time] == this.drittwunsch[time]) {
                 alert("Es dürfen keine zwei Wünsche gleich sein!")
             }
             fetch(`/vote?time=${time}`, {
                 method: 'POST',
                 body: JSON.stringify({
                     vote: [
-                        this.erstwunsch,
-                        this.zweitwunsch,
-                        this.drittwunsch
+                        this.erstwunsch[time],
+                        this.zweitwunsch[time],
+                        this.drittwunsch[time]
                     ]
                 })
             }).then(response => response.json())
@@ -91,31 +93,44 @@ export default {
             Drittwunsch: {{ result.drittwunsch }} <br>
         </v-card-text>
     </v-card>
-    <v-list v-if="voting.open">
-        <v-card v-for="option in options" v-bind:key="option.id">
-            <v-card-title>
-                {{ option.name }}
-            </v-card-title>
-            <v-card-actions>
-                <v-btn :color="erstwunsch == option.name ? 'success' : ''"
-                    @click="erstwunsch = option.name">Erstwunsch</v-btn>
-                <v-btn :color="zweitwunsch == option.name ? 'success' : ''"
-                    @click="zweitwunsch = option.name">Zweitwunsch</v-btn>
-                <v-btn :color="drittwunsch == option.name ? 'success' : ''"
-                    @click="drittwunsch = option.name">Drittwunsch</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-list>
-    <v-card v-if="voting.open">
-        <v-card-title>
-            Absenden
-        </v-card-title>
-        <v-card-text>
-            Wahl abschließen?
-        </v-card-text>
-        <v-card-actions>
-            <v-btn @click="vote(voting.voting)">Send it</v-btn>
-        </v-card-actions>
-    </v-card></template>
+    <v-expansion-panels>
+        <v-expansion-panel v-for="voting, index in votings" v-bind:key="voting.voting">
+            <v-expansion-panel-title>
+                {{ voting.voting }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-content>
+                <v-list>
+                    <v-list-item v-for="option in options[voting.voting]" v-bind:key="option.id">
+                        <v-card>
+                            <v-card-title>
+                                {{ option.name }}
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn :color="erstwunsch[voting.voting] == option.name ? 'success' : ''"
+                                    @click="erstwunsch[voting.voting] = option.name">Erstwunsch</v-btn>
+                                <v-btn :color="zweitwunsch[voting.voting] == option.name ? 'success' : ''"
+                                    @click="zweitwunsch[voting.voting] = option.name">Zweitwunsch</v-btn>
+                                <v-btn :color="drittwunsch[voting.voting] == option.name ? 'success' : ''"
+                                    @click="drittwunsch[voting.voting] = option.name">Drittwunsch</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-list-item>
+                </v-list>
+
+                <v-card>
+                    <v-card-title>
+                        Absenden
+                    </v-card-title>
+                    <v-card-text>
+                        Wahl für {{ voting.voting }} abschließen?
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn @click="vote(voting.voting)">Send it</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-expansion-panel-content>
+        </v-expansion-panel>
+    </v-expansion-panels>
+</template>
 
 <style scoped></style>
