@@ -18,17 +18,6 @@ declare global {
 export default (db: Db): Router => {
     const router = Router();
 
-    // route.post /check-code check if code matches regex /^[A-Z0-9]{8}$/
-    // TODO! check if code exists in db and is valid to register
-    router.post("/check-code", async (req, res) => {
-        const code = req.body.code;
-        if (code.match(/^[A-Z0-9]{8}$/)) {
-            res.status(200).send({ valid: true });
-        } else {
-            res.status(200).send({ valid: false });
-        }
-    });
-
     // router.post /register register a new device
     router.post("/register", async (req, res) => {
         const code = req.body.code;
