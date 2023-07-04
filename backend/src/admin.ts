@@ -117,7 +117,7 @@ export default function (db: Db): Router {
         }
     })
 
-    router.get("/results", (req, res) => {
+    router.get("/results", async (req, res) => {
         // check if admin cookie is set
         if (!req.cookies.admin) {
             res.status(401).send("Unauthorized");
@@ -142,7 +142,7 @@ export default function (db: Db): Router {
         }
 
         // find results in db
-        const assignedUsers = users.find({ results: { [req.query.time]: req.query.project } }).toArray();
+        const assignedUsers = await users.find({ results: { [req.query.time]: req.query.project } }).toArray();
         
         if (assignedUsers.length === 0) {
             res.status(404).send({ error: "Not Found" });
