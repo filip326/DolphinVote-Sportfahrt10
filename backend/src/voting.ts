@@ -1,3 +1,4 @@
+import { ObjectIdLike } from "bson";
 import { Router } from "express";
 import { Db, ObjectId } from "mongodb";
 import { VoteOption, VoteTime } from "types/vote";
@@ -91,11 +92,11 @@ export default function (db: Db): Router {
 
         // check if body is valid
         // body is supposed to be an array of 3 ObjectIds
-        if (!Array.isArray(req.body) || req.body.length !== 3) {
+        if (!Array.isArray(req.body.vote) || req.body.vote.length !== 3) {
             res.status(400).send("Invalid body");
             return;
         }
-        for (const id of req.body) {
+        for (const id of req.body.vote) {
             if (typeof id !== "string" || id.match(/^[0-9a-f]{24}$/) === null || !ObjectId.isValid(id)) {
                 res.status(400).send("Invalid body");
                 return;
@@ -105,7 +106,7 @@ export default function (db: Db): Router {
         // check if all ids of bodyare valid projects
         const result = await projectColleciton.find({
             _id: {
-                $in: req.body.map(id => new ObjectId(id))
+                $in: req.body.vote.map((id: string | number | ObjectId | ObjectIdLike) => new ObjectId(id))
             },
             time: req.query.time
         }).project({
@@ -121,7 +122,7 @@ export default function (db: Db): Router {
             _id: req.auth.user._id
         }, {
             $set: {
-                [`votes.${req.query.time}`]: req.body.map(id => new ObjectId(id))
+                [`votes.${req.query.time}`]: req.body.map((id: string | number | ObjectId | ObjectIdLike ) => new ObjectId(id))
             }
         });
 

@@ -4,9 +4,29 @@ import { VotingResponse, OptionResponse, ResultResponse, VotingType } from './ty
 export default {
     data() {
         return {
-            voting: {} as VotingResponse,
-            options: [] as OptionResponse[] || undefined,
-            result: {} as ResultResponse || undefined,
+            voting: {
+                open: true,
+                voting: 'Mi-Vormittag'
+            } as VotingResponse,
+            options: [
+                {
+                    id: 1,
+                    name: 'Coding'
+                },
+                {
+                    id: 2,
+                    name: 'Tennis'
+                },
+                {
+                    id: 3,
+                    name: 'Basketball'
+                }
+            ],
+            result: {
+                erstwunsch: 'Coding',
+                zweitwunsch: 'Tennis',
+                drittwunsch: 'Basketball'
+            } as ResultResponse || undefined,
             erstwunsch: '',
             zweitwunsch: '',
             drittwunsch: ''
@@ -36,16 +56,24 @@ export default {
     },
     methods: {
         vote(time: VotingType) {
+            if (!this.erstwunsch || !this.zweitwunsch || !this.drittwunsch) {
+                alert("Es müssen Erstwunsch, Zweitwunsch und Drittwunsch ausgewählt sein!")
+            }
+            if (this.erstwunsch == this.zweitwunsch || this.erstwunsch == this.drittwunsch || this.zweitwunsch == this.drittwunsch) {
+                alert("Es dürfen keine zwei Wünsche gleich sein!")
+            }
             fetch(`/vote?time=${time}`, {
                 method: 'POST',
-                body: JSON.stringify([
-                    this.erstwunsch,
-                    this.zweitwunsch,
-                    this.drittwunsch
-                ])
+                body: JSON.stringify({
+                    vote: [
+                        this.erstwunsch,
+                        this.zweitwunsch,
+                        this.drittwunsch
+                    ]
+                })
             }).then(response => response.json())
                 .catch(error => {
-                    alert(error);
+                    console.log(error)
                 })
         }
     }
@@ -57,11 +85,11 @@ export default {
         <v-card-title>
             Deine Ergebnisse
         </v-card-title>
-        <v-text>
+        <v-card-text>
             Erstwunsch: {{ result.erstwunsch }} <br>
             Zweitwunsch: {{ result.zweitwunsch }} <br>
             Drittwunsch: {{ result.drittwunsch }} <br>
-        </v-text>
+        </v-card-text>
     </v-card>
     <v-list v-if="voting.open">
         <v-card v-for="option in options" v-bind:key="option.id">
@@ -69,9 +97,12 @@ export default {
                 {{ option.name }}
             </v-card-title>
             <v-card-actions>
-                <v-btn @click="erstwunsch = option.name">Erstwunsch</v-btn>
-                <v-btn @click="zweitwunsch = option.name">Zweitwunsch</v-btn>
-                <v-btn @click="drittwunsch = option.name">Drittwunsch</v-btn>
+                <v-btn :color="erstwunsch == option.name ? 'success' : ''"
+                    @click="erstwunsch = option.name">Erstwunsch</v-btn>
+                <v-btn :color="zweitwunsch == option.name ? 'success' : ''"
+                    @click="zweitwunsch = option.name">Zweitwunsch</v-btn>
+                <v-btn :color="drittwunsch == option.name ? 'success' : ''"
+                    @click="drittwunsch = option.name">Drittwunsch</v-btn>
             </v-card-actions>
         </v-card>
     </v-list>
@@ -85,7 +116,6 @@ export default {
         <v-card-actions>
             <v-btn @click="vote(voting.voting)">Send it</v-btn>
         </v-card-actions>
-    </v-card>
-</template>
+    </v-card></template>
 
 <style scoped></style>
