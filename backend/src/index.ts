@@ -16,9 +16,9 @@ declare global {
 }
 
 import auth from "./auth";
-import initdb from "initdb";
-import voting from "voting";
-import admin from "admin";
+import initdb from "./initdb";
+import voting from "./voting";
+import admin from "./admin";
 
 async function main() {
 
