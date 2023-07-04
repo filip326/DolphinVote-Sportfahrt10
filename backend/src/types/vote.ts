@@ -1,8 +1,3 @@
-interface ResIUser {
-    name: string;
-    class: string;
-}
-
 export interface VoteData {
     name: string;
     klasse: string;
