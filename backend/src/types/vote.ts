@@ -1,4 +1,7 @@
-import IUser from './user'
+interface ResIUser {
+    name: string;
+    class: string;
+}
 
 export interface VoteData {
     name: string;
@@ -10,5 +13,18 @@ export interface VoteOption {
     option_name: string;
     free_slots: number;
     time: "Mi-Vormittag" | "Mi-Nachmittag" | "Do-Vormittag" | "Do-Nachmittag";
-    voters?: IUser[];
+    voters?: ResIUser[];
+}
+
+export interface ResData {
+    name: string;
+    klasse: string;
+    timeframe: string;
+    options: VoteData[];
+    buttons: {
+        [key: number]: {
+            loading: boolean;
+            success?: boolean;
+        } | undefined;
+    }
 }

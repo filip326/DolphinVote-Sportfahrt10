@@ -77,11 +77,18 @@ export default {
         <v-list-item v-for="(option, index) in data.options" v-bind:key="option.options[index].option_name">
             <v-card>
                 <v-card-title>
-                    {{ option.options[index].option_name }}
+                    {{ option.options[index].time }} {{ option.options[index].option_name }}
                 </v-card-title>
                 <v-card-subtitle>
                     {{ option.options[index].free_slots }} freie Plätze übrig
                 </v-card-subtitle>
+                <v-card-text>
+                    <ul>
+                        <li v-for="voter in option.options[index].voters">
+                            {{ voter.name }} | {{ voter.class }}
+                        </li>
+                    </ul>
+                </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" @click="select(index)" :loading="data.buttons[index]?.loading">
                         Eintragen
