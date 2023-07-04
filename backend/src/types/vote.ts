@@ -16,10 +16,16 @@ export interface VoteOption {
     voters?: ResIUser[];
 }
 
+interface SmallVoteData {
+    name: string;
+    time: "Mi-Vormittag" | "Mi-Nachmittag" | "Do-Vormittag" | "Do-Nachmittag";
+}
+
 export interface ResData {
     name: string;
     klasse: string;
     timeframe: string;
+    yourvotes: SmallVoteData[]
     options: VoteData[];
     buttons: {
         [key: number]: {

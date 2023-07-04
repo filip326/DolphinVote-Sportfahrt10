@@ -31,6 +31,16 @@ async function main() {
 
   app.use(auth(db));
 
+  app.post("/vote", async (req, res) => {
+    // check if user is logged in
+    if (!req.auth?.user) {
+      res.status(401).redirect("/");
+      return;
+    }
+
+    // todo
+  });
+
   app.use(express.static(process.env.PUBLIC_DIR ?? "public"));
 
   app.use((req, res) => {
