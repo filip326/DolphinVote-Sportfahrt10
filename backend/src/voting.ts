@@ -52,6 +52,8 @@ export default function (db: Db): Router {
             return;
         }
 
+        console.log(await projectColleciton.find({time: req.query.time}).toArray())
+
         const result = (await projectColleciton.find({
             time: req.query.time
         }).toArray())?.map((project) => ({
@@ -64,6 +66,8 @@ export default function (db: Db): Router {
             return;
         }
         
+        console.log(`sending options`, result)
+
         res.status(200).send(result);
     })
 
@@ -90,15 +94,19 @@ export default function (db: Db): Router {
             return;
         }
 
+        console.log(req.body)
+
         // check if body is valid
         // body is supposed to be an array of 3 ObjectIds
-        if (!Array.isArray(req.body.vote) || req.body.vote.length !== 3) {
+        if (!Array.isArray(req.body) || req.body.length !== 3) {
             res.status(400).send("Invalid body");
+            console.log("invalid body, no array or length !== 3")
             return;
         }
-        for (const id of req.body.vote) {
-            if (typeof id !== "string" || id.match(/^[0-9a-f]{24}$/) === null || !ObjectId.isValid(id)) {
+        for (const id of req.body) {
+            if (typeof id !== "string" || !id.match(/^[0-9a-f]{24}$/) || !ObjectId.isValid(id)) {
                 res.status(400).send("Invalid body");
+                console.log("invalid body, not a valid ObjectId")
                 return;
             }
         }
@@ -106,7 +114,7 @@ export default function (db: Db): Router {
         // check if all ids of bodyare valid projects
         const result = await projectColleciton.find({
             _id: {
-                $in: req.body.vote.map((id: string | number | ObjectId | ObjectIdLike) => new ObjectId(id))
+                $in: req.body.map((id: string | number | ObjectId | ObjectIdLike) => new ObjectId(id))
             },
             time: req.query.time
         }).project({
@@ -136,6 +144,19 @@ export default function (db: Db): Router {
         res.status(200).send("OK");
 
     });
+
+    router.get("/result", async (req, res) => {
+        // check if user is authenticated
+        if (!req.auth || req.auth.auth === false || !req.auth.user) {
+            res.status(401).send("Unauthorized");
+            return;
+        }
+
+        res.status(200).send(
+            req.auth.user.results ?? {}
+        )
+
+    })
 
 
     return router;

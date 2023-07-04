@@ -28,6 +28,12 @@ async function main() {
 
   await initdb(db);
 
+  
+  
+  app.use(express.json());
+  app.use(cookieParser());
+  
+  app.use(auth(db));
   /* 
   Vote
   */
@@ -39,12 +45,6 @@ async function main() {
   */
 
   app.use(admin(db));
-
-
-  app.use(express.json());
-  app.use(cookieParser());
-
-  app.use(auth(db));
 
   app.post("/vote", async (req, res) => {
     // check if user is logged in
