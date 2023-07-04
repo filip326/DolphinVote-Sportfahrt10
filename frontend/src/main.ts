@@ -30,6 +30,11 @@ const routes = [
         path: "/vote",
         name: "Wahl",
         component: () => import("./views/VoteView.vue")
+    },
+    {
+        '/admin',
+        name: "Admin",
+        component: () => import("./views/Admin.vue")
     }
 ];
 
