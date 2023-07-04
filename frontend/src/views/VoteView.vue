@@ -3,17 +3,21 @@
 export default {
     data() {
         return {
+            dialog: {
+                open: false,
+                votingId: undefined as string | undefined,
+            },
             openVotings: [
                 // sample
                 {
                     voting: 'Voting 1',
-                    open: true
+                    open: true,
                 },
                 {
                     voting: 'Voting 2',
-                    open: false
+                    open: false,
                 }
-            ] as { voting: string, open: boolean, _id: string }[],
+            ] as { voting: string, open: boolean, }[],
             votingResults: {
                 "Sample": "Activity 1"
             } as {
@@ -48,12 +52,21 @@ export default {
                 const data = await response.json() as { [title: string]: string };
                 this.votingResults = data;
             } else throw new Error("Error loading voting results");
+        },
+        async vote(id: string) {
+            // open dialog
+            this.dialog.open = true;
+            // set voting id
+            this.dialog.votingId = id;
+
+            // http post /options
         }
     },
     async beforeMount() {
         try {
             await Promise.all([this.loadOpenVotings(), this.loadVotingResults()]);
         } catch {
+            // <!-- TODO remove comment for production -->
             // this.$router.push("/")
         }
     }
@@ -102,6 +115,11 @@ export default {
             </p>
         </v-card-text>
     </v-card>
+    <v-dialog
+        v-model="dialog.open"
+    >
+        <!-- TODO! @Barsch2006 -->
+    </v-dialog>
 </template>
 
 <style>
