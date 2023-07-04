@@ -12,14 +12,15 @@ export interface VoteData {
 export interface VoteOption {
     option_name: string;
     free_slots: number;
-    time: "Mi-Vormittag" | "Mi-Nachmittag" | "Do-Vormittag" | "Do-Nachmittag";
-    voters?: ResIUser[];
+    time: VoteTime;
 }
 
 interface SmallVoteData {
     name: string;
-    time: "Mi-Vormittag" | "Mi-Nachmittag" | "Do-Vormittag" | "Do-Nachmittag";
+    time: VoteTime;
 }
+
+export type VoteTime = "Mi-Vormittag" | "Mi-Nachmittag" | "Do-Vormittag" | "Do-Nachmittag";
 
 export interface ResData {
     name: string;

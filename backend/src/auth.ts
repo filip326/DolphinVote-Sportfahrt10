@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Db } from "mongodb";
+import { Db, WithId } from "mongodb";
 import IUser from "./types/user";
 
 declare global {
@@ -7,7 +7,7 @@ declare global {
         interface Request {
             auth?: {
                 auth?: boolean;
-                user?: IUser;
+                user?: WithId<IUser>;
             }
         }
     }
@@ -61,7 +61,7 @@ export default (db: Db): Router => {
 
         // send the cookie to the client
         res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true, secure: true });
-        res.status(200).send({ success: true, cookie: cookie });
+        res.status(200).send({ success: true });
     });
 
     // for every route below this, check if the device cookie is set and if set the user in req.user
