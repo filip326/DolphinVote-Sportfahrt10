@@ -51,13 +51,19 @@ export default function (db: Db): Router {
             return;
         }
 
-        const result = await projectColleciton.find({
+        const result = (await projectColleciton.find({
             time: req.query.time
-        }).project({
-            _id: 1,
-            option_name: 1,
-            free_slots: 1,
-        }).toArray()        
+        }).toArray())?.map((project) => ({
+            id: project._id.toHexString(),
+            name: project.option_name,
+        })) ?? undefined;
+
+        if (!result) {
+            res.status(500).send("Internal Server Error");
+            return;
+        }
+        
+        res.status(200).send(result);
     })
 
     router.post("/vote", async (req, res) => {
@@ -96,7 +102,7 @@ export default function (db: Db): Router {
             }
         }
 
-        // check if all ids of body are valid projects
+        // check if all ids of bodyare valid projects
         const result = await projectColleciton.find({
             _id: {
                 $in: req.body.map(id => new ObjectId(id))

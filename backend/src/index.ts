@@ -23,7 +23,7 @@ async function main() {
 
   const client = new MongoClient(process.env.MONGO_URL ?? "");
   await client.connect();
-  const db = client.db(process.env.DB_NAME ?? "Sportfahrt");
+  const db = client.db(process.env.DB_NAME ?? "DolphinVOTE");
 
   await initdb(db);
 
