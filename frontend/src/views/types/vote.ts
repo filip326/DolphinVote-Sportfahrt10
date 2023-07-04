@@ -6,4 +6,9 @@ export interface VotingResponse {
     open: boolean;
 }
 
+export interface OptionResponse {
+    id: string;
+    name: string;
+}
 
+export type ResultResponse = { [key: string]: string };
