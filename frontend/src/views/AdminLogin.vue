@@ -25,7 +25,7 @@ export default {
 
             this.button.disabled = true;
             this.button.loading = true;
-            const result = await fetch("/login", {
+            const result = await fetch("/admin-login", {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
