@@ -18,6 +18,7 @@ declare global {
 import auth from "./auth";
 import initdb from "initdb";
 import voting from "voting";
+import admin from "admin";
 
 async function main() {
 
@@ -36,6 +37,8 @@ async function main() {
   /* 
   Admin
   */
+
+  app.use(admin(db));
 
 
   app.use(express.json());
