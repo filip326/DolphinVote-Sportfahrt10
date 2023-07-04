@@ -17,6 +17,7 @@ export default (db: Db): Router => {
     const router = Router();
 
     // route.post /check-code check if code matches regex /^[A-Z0-9]{8}$/
+    // TODO! check if code exists in db and is valid to register
     router.post("/check-code", async (req, res) => {
         const code = req.body.code;
         if (code.match(/^[A-Z0-9]{8}$/)) {
@@ -39,6 +40,7 @@ export default (db: Db): Router => {
         }
 
         // check if name and code exists in db
+        // TODO! use global code and not single codes for every user
         const result = await db.collection<IUser>("users").findOne({ code: code, name: name, klasse: klasse });
         if (!result) {
             res.status(401).send("No");
@@ -51,12 +53,14 @@ export default (db: Db): Router => {
         }
 
         // create a device cookie and add it to the db
+        // TODO! use crypto.randomBytes instead of Math.random
         const cookie = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         // set the device for the user in db
+        // TODO! check if db write was successful
         await db.collection("users").updateOne({ code: code, name: name, klasse: klasse }, { $set: { device: cookie } });
 
         // send the cookie to the client
-        res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true });
+        res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true, secure: true });
         res.status(200).send({ success: true, cookie: cookie });
     });
 
