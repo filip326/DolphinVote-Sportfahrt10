@@ -24,11 +24,6 @@ export default {
                     }
                 ]
             } as unknown as { [key: string]: OptionResponse[] },
-            result: {
-                erstwunsch: 'Coding',
-                zweitwunsch: 'Tennis',
-                drittwunsch: 'Basketball'
-            } as ResultResponse || undefined,
             erstwunsch: {} as { [key: string]: string },
             zweitwunsch: {} as { [key: string]: string },
             drittwunsch: {} as { [key: string]: string },
@@ -49,12 +44,6 @@ export default {
                     this.options[voting.voting] = data;
                 })
         })
-        // fetch results
-        fetch(`/results`)
-            .then(response => response.json())
-            .then(data => {
-                this.result = data;
-            })
     },
     methods: {
         vote(time: VotingType) {
@@ -83,16 +72,6 @@ export default {
 </script>
 
 <template>
-    <v-card v-if="result && result.erstwunsch && result.zweitwunsch && result.drittwunsch">
-        <v-card-title>
-            Deine Ergebnisse
-        </v-card-title>
-        <v-card-text>
-            Erstwunsch: {{ result.erstwunsch }} <br>
-            Zweitwunsch: {{ result.zweitwunsch }} <br>
-            Drittwunsch: {{ result.drittwunsch }} <br>
-        </v-card-text>
-    </v-card>
     <v-expansion-panels>
         <v-expansion-panel v-for="voting, index in votings" v-bind:key="voting.voting">
             <v-expansion-panel-title>

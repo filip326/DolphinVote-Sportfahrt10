@@ -1,7 +1,7 @@
 import { ObjectIdLike } from "bson";
 import { Router } from "express";
 import { Db, ObjectId } from "mongodb";
-import { VoteOption, VoteTime } from "types/vote";
+import { VoteOption } from "types/vote";
 
 
 export default function (db: Db): Router {
@@ -136,27 +136,6 @@ export default function (db: Db): Router {
         res.status(200).send("OK");
 
     });
-
-    router.get('/result', async (req, res) => {
-        // check authentication
-        if (!req.auth || req.auth.auth === false || !req.auth.user) {
-            res.status(401).send("Unauthorized");
-            return;
-        }
-        
-        const results = req.auth.user.results;
-        if (!results) {
-            res.status(404).send("No results found");
-            return;
-        }
-        let votingResults: { [key in VoteTime]?: string } = {};
-        for await (const time of Object.keys(results) as VoteTime[]) {
-            votingResults[time] = (await projectColleciton.findOne({
-                _id: results[time]
-            }))?.option_name;
-        }
-        res.status(200).send(votingResults);
-    })
 
 
     return router;
