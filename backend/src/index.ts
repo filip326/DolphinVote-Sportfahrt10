@@ -17,6 +17,7 @@ declare global {
 
 import auth from "./auth";
 import initdb from "initdb";
+import voting from "voting";
 
 async function main() {
 
@@ -29,6 +30,8 @@ async function main() {
   /* 
   Vote
   */
+
+  app.use(voting(db));
 
   /* 
   Admin

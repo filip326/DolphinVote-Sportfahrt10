@@ -42,19 +42,21 @@ export default (db: Db): Router => {
         }
 
         // create a device cookie and add it to the db
-        // TODO! use crypto.randomBytes instead of Math.random
         const cookie = randomBytes(32).toString("base64");
         // set the device for the user in db
-        // TODO! check if db write was successful
-        await db.collection<IUser>("users").updateOne({ _id: result._id }, { $set: { device: cookie } });
+        const dbresult = await db.collection<IUser>("users").updateOne({ _id: result._id }, { $set: { device: cookie } });
 
         // send the cookie to the client
-        res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true, secure: true });
-        res.status(200).send({ success: true });
+        if (dbresult.acknowledged) {
+            res.cookie("device", cookie, { maxAge: 1000 * 60 * 60 * 24 * 365 * 10, httpOnly: true, secure: true });
+            res.status(200).send({ success: true });
+        } else {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
     });
 
     // for every route below this, check if the device cookie is set and if set the user in req.user
-    router.use((req, _, next) => {
+    router.use(async (req, _, next) => {
         // check if device cookie is set
         if (!req.cookies.device) {
             req.auth = { auth: false };
@@ -62,17 +64,17 @@ export default (db: Db): Router => {
         }
 
         // find the user with the device cookie
-        db.collection<IUser>("users").findOne({ device: req.cookies.device }).then((result) => {
-            // if no user is found, set auth to false
-            if (!result) {
-                req.auth = { auth: false, user: undefined };
-                next();
-            } else {
-                // if a user is found, set auth to true and set the user in req.user
-                req.auth = { auth: true, user: result };
-                next();
-            }
-        });
+        const result = await db.collection<IUser>("users").findOne({ device: req.cookies.device })
+
+        // if no user is found, set auth to false
+        if (!result) {
+            req.auth = { auth: false, user: undefined };
+            next();
+        } else {
+            // if a user is found, set auth to true and set the user in req.user
+            req.auth = { auth: true, user: result };
+            next();
+        }
     });
 
     return router;
