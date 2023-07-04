@@ -4,26 +4,9 @@ import { VotingResponse, OptionResponse, ResultResponse, VotingType } from './ty
 export default {
     data() {
         return {
-            votings: [{
-                open: true,
-                voting: 'Mi-Vormittag'
-            }] as VotingResponse[],
+            votings: [] as VotingResponse[],
             options: {
-                "Mi-Vormittag": [
-                    {
-                        id: 1,
-                        name: 'Coding'
-                    },
-                    {
-                        id: 2,
-                        name: 'Tennis'
-                    },
-                    {
-                        id: 3,
-                        name: 'Basketball'
-                    }
-                ]
-            } as unknown as { [key: string]: OptionResponse[] },
+            } as { [key: string]: OptionResponse[] },
             erstwunsch: {} as { [key: string]: string },
             zweitwunsch: {} as { [key: string]: string },
             drittwunsch: {} as { [key: string]: string },
