@@ -16,12 +16,15 @@ declare global {
 }
 
 import auth from "./auth";
+import initdb from "initdb";
 
 async function main() {
 
   const client = new MongoClient(process.env.MONGO_URL ?? "");
   await client.connect();
-  const db = client.db(process.env.DB_NAME ?? "ATec");
+  const db = client.db(process.env.DB_NAME ?? "Sportfahrt");
+
+  await initdb(db);
 
   app.use(express.json());
   app.use(cookieParser());

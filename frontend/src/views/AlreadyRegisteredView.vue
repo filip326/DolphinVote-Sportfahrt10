@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+    
+}
+</script>
+
 <template>
 
     <v-card prepend-icon="mdi-alert">

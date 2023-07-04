@@ -22,9 +22,14 @@ const routes = [
         component: () => import("./views/AlreadyRegisteredView.vue")
     },
     {
-        path: "/wron-credentials",
+        path: "/wrong-credentials",
         name: "Falsche Anmeldedaten",
         component: () => import("./views/WrongCredentialsView.vue")
+    },
+    {
+        path: "/vote",
+        name: "Wahl",
+        component: () => import("./views/VoteView.vue")
     }
 ];
 

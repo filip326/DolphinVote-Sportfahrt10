@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts">
 
 interface VoteData {
     name: string;
@@ -10,9 +10,6 @@ interface VoteData {
         free_slots: number;
     }[];
 }
-</script>
-
-<script lang="ts">
 
 export default {
     data() {
