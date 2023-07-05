@@ -1,0 +1,106 @@
+{
+  "index.css": {
+    "file": "src/assets/index-bb7326e9.css",
+    "src": "index.css"
+  },
+  "index.html": {
+    "assets": [
+      "src/assets/materialdesignicons-webfont-67d24abe.eot",
+      "src/assets/materialdesignicons-webfont-c1c004a9.woff2",
+      "src/assets/materialdesignicons-webfont-80bb28b3.woff",
+      "src/assets/materialdesignicons-webfont-a58ecb54.ttf"
+    ],
+    "css": [
+      "src/assets/index-bb7326e9.css"
+    ],
+    "dynamicImports": [
+      "src/views/AlreadyRegisteredView.vue",
+      "src/views/WrongCredentialsView.vue",
+      "src/views/VoteView.vue",
+      "src/views/GeneralErrorView.vue",
+      "src/views/Admin.vue",
+      "src/views/AdminLogin.vue"
+    ],
+    "file": "src/assets/index-d0402e1b.js",
+    "isEntry": true,
+    "src": "index.html"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot": {
+    "file": "src/assets/materialdesignicons-webfont-67d24abe.eot",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf": {
+    "file": "src/assets/materialdesignicons-webfont-a58ecb54.ttf",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff": {
+    "file": "src/assets/materialdesignicons-webfont-80bb28b3.woff",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2": {
+    "file": "src/assets/materialdesignicons-webfont-c1c004a9.woff2",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
+  },
+  "src/views/Admin.css": {
+    "file": "src/assets/Admin-4a29a200.css",
+    "src": "src/views/Admin.css"
+  },
+  "src/views/Admin.vue": {
+    "css": [
+      "src/assets/Admin-4a29a200.css"
+    ],
+    "file": "src/assets/Admin-cd7cf78f.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/Admin.vue"
+  },
+  "src/views/AdminLogin.css": {
+    "file": "src/assets/AdminLogin-2446b27c.css",
+    "src": "src/views/AdminLogin.css"
+  },
+  "src/views/AdminLogin.vue": {
+    "css": [
+      "src/assets/AdminLogin-2446b27c.css"
+    ],
+    "file": "src/assets/AdminLogin-20816e2f.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/AdminLogin.vue"
+  },
+  "src/views/AlreadyRegisteredView.vue": {
+    "file": "src/assets/AlreadyRegisteredView-0478aa92.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/AlreadyRegisteredView.vue"
+  },
+  "src/views/GeneralErrorView.vue": {
+    "file": "src/assets/GeneralErrorView-eabb6f5d.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/GeneralErrorView.vue"
+  },
+  "src/views/VoteView.vue": {
+    "file": "src/assets/VoteView-279e765b.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/VoteView.vue"
+  },
+  "src/views/WrongCredentialsView.vue": {
+    "file": "src/assets/WrongCredentialsView-426503c0.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/views/WrongCredentialsView.vue"
+  }
+}
